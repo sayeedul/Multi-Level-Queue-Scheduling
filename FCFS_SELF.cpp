@@ -1,5 +1,5 @@
 #include<stdio.h>
-                                        //FCFS SELF done algorithm...
+                //FIRST COME FIRST SERVE SCHEDULING ALGORITHM
 struct process
 {
 	int pid,bt,wt,tat;
