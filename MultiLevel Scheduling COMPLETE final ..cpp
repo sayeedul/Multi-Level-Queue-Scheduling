@@ -31,7 +31,7 @@ int main()
   	
   	if(pd.priority>=1 && pd.priority<=10)
   	{
-  		queue3[p++]=pd; n3++;   //n1 size of queue1 
+  		queue3[p++]=pd; n3++;   //n3 size of queue3 
 	  }
 	else if(pd.priority>=11 && pd.priority<=20)
   	{
@@ -39,7 +39,7 @@ int main()
 	  }
 	else if(pd.priority>=21 && pd.priority<=30)
   	{
-  		queue1[r++]=pd; n1++;  //n3 size of queue3
+  		queue1[r++]=pd; n1++;  //n1 size of queue1
 	  }
     else
     {
@@ -101,8 +101,6 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
         bool Done = true;   
         for (int k = 1 ; k <=3; k++) // To traverse each queue.
         {
-		  count_time=0;
-		  
 		 if(Rem_bt[k]>0)  
 		  { 
 		    Done = false ; // There is a pending queue 
@@ -116,7 +114,7 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 			  {
         		  
     			 t += c1 ; // Current time
-                 count_time=0;
+                 count_time= 0;
    				 while (1)
     			 {
       			  bool done = true;
@@ -130,7 +128,7 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
                 		    {
                   				if(count_time+quantum>10)
                   				{
-                  					rem1_bt[i]-= 10-count_time; t+= 10-count_time  ; break;
+                  					rem1_bt[i]-= 10-count_time; t+= 10-count_time ;count_time=10 ; break;
 								  }
 								t += quantum; count_time += quantum;
                     			rem1_bt[i] -= quantum;
@@ -140,19 +138,19 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
                 			{
                 				if(count_time+q1[i].bt>10)
                   				{
-                  					rem1_bt[i]-= 10-count_time ;t+= 10-count_time;  break; 
+                  					rem1_bt[i]-= 10-count_time ;t+= 10-count_time; count_time=10 ; break; 
 								  }
                     			t = t + rem1_bt[i];
                     			q1[i].wt += t - q1[i].bt;  count_time+=q1[i].bt;   
                     			rem1_bt[i] = 0;
                 	      	}
             		  }
-            		  if(count_time>10)
+            		  if(count_time==10)
             		   {
             		     break; 
 					   }
         		     }
-                     if (done == true || count_time>10)
+                     if (done == true || count_time==10)
                         break;
                     } // end of inner RR while loop.
  					
@@ -162,7 +160,7 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 				 } // end of Queue1 highest priority.--------------------------------------------------------------
                	
 			  
-			  else if(k==2 && n2!=0)  // QUEUE2 STARTING Priority Algo.
+			  else if(k==2 && n2!=0)  // QUEUE2 Starting Priority Algo.
 				{
                  //calculating WAITING TIME....
      			   count_time=0;
@@ -184,7 +182,7 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 						   rem2_bt[i]-= 1;
 					       count_time++;
 						}				   
-					   if(count_time>10)
+					   if(count_time==10)
 					          break;
 					    if(i==n2)
 					    {
@@ -223,7 +221,7 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 						   rem3_bt[i]-= 1;
 					       count_time+= 1;
 						}				   
-					    if(count_time>10)
+					    if(count_time==10)
 					          break;
 					    if(i==n3)
 					    {
@@ -246,7 +244,6 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
          else
 		 { 
 		   
-		 
 		   if(k==1 && n1!=0)  // QUEUE1
 		   {  
     			t += c1;  	
@@ -302,8 +299,7 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 							 q2[i+1].wt = q2[i].bt + q2[i].wt +c2 ; continue; 
 					   }
 					     q2[i].wt += c2 ;
-					     rem2_bt[i]=0;
-						   	
+					     rem2_bt[i]=0;			   	
 					     q2[i+1].wt = q2[i].bt + q2[i].wt ;
 				    }
 				    
@@ -329,7 +325,7 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 					   }
 					   else if(rem3_bt[i]<=0 && rem3_bt[i+1]>0 ) 
         		       {
-        		       	 // q3[i].wt += c3 ;
+        		       	 
 							 q3[i+1].wt = q3[i].bt + q3[i].wt +c3 ; continue; 
 					   }
 					     q3[i].wt += c3 ;
@@ -343,12 +339,10 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 		 	
 		}  //end of Else : Rem_bt[k]>QUANTUM 
      		    
-        //========================================================================================================
-       
-            
+        //========================================================================================================     
 	   } //end of Rem_bt[k]>0
       
-	} // end of OUTER i-loop. 
+	} // end of OUTER k-loop. 
 
 		if (Done == true)
             break;
