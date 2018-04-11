@@ -13,9 +13,9 @@ int main()
   printf("ENTER THE NUMBER of processes : ");
   scanf("%d",&n);
   printf("\nPRIORITY RANGE OF QUEUES : ");
-  printf("\n \tQueue1 : 1 - 10 ");
+  printf("\n \tQueue3 : 1 - 10 ");
   printf("\n \tQueue2 : 11 - 20 ");
-  printf("\n \tQueue3 : 21 - 30 \n");
+  printf("\n \tQueue1 : 21 - 30 \n");
   struct process queue1[n],queue2[n],queue3[n];
   printf("\nENTER Process Number , Priority , and Burst Time : \n");
   for( i=1;i<=n;i++)
@@ -51,7 +51,7 @@ int main()
   
 //------------------------------------------------------------------------------------------------------------------------------------
 
-struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
+struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 
     for (int i = 1 ; i <= n1 ; i++)
     {
@@ -70,7 +70,7 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 
 // ------------------------------------------------------------------------------------------------------------------------------------
  
-    int curr_time = 0,count_time; // Current time
+    int count_time=0; 
     int rem1_bt[n1] , rem2_bt[n2] , rem3_bt[n3] ;
     for (int i = 1 ; i <= n1 ; i++)
         rem1_bt[i] =  q1[i].bt ;
@@ -93,7 +93,7 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
         				q2[i]=q2[pos];
         				q2[pos]=temp;
     			  }
-             int c1=0,c2=0,c3=0; int t; // for waiting times.		  
+             int c1=0,c2=0,c3=0; int t=0; // for waiting times.		  
  //---------------------------------------------------------------------------------------------------------------------
      
     while (1) // OUTER while loop
@@ -112,10 +112,10 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 		     	
 			if(Rem_bt[k]>QUANTUM)
 			{
-			  if(k==1) // queue1 RR with HIGHEST PRIORITY  ---------
+			  if(k==1 && n1!=0) // queue1 RR with HIGHEST PRIORITY  --------- 
 			  {
-        		//curr_time+= c1;  
-    			 t += c1 ; // t += c1 ; // Current time
+        		  
+    			 t += c1 ; // Current time
                  count_time=0;
    				 while (1)
     			 {
@@ -130,40 +130,39 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
                 		    {
                   				if(count_time+quantum>10)
                   				{
-                  					rem1_bt[i]-= 10-count_time ; break;
+                  					rem1_bt[i]-= 10-count_time; t+= 10-count_time  ; break;
 								  }
 								t += quantum; count_time += quantum;
                     			rem1_bt[i] -= quantum;
-                    			//sum1 -= quantum;  
+                    			  
                 			 }
                 			else
                 			{
                 				if(count_time+q1[i].bt>10)
                   				{
-                  					rem1_bt[i]-= 10-count_time ; break;
+                  					rem1_bt[i]-= 10-count_time ;t+= 10-count_time;  break; 
 								  }
                     			t = t + rem1_bt[i];
-                    			q1[i].wt += t - q1[i].bt;  count_time+=q1[i].bt;   //sum1-= q1[i].bt;
+                    			q1[i].wt += t - q1[i].bt;  count_time+=q1[i].bt;   
                     			rem1_bt[i] = 0;
                 	      	}
-            		 }
+            		  }
             		  if(count_time>10)
             		   {
-            		     break; //Rem_bt[1]=sum1;
+            		     break; 
 					   }
         		     }
                      if (done == true || count_time>10)
                         break;
                     } // end of inner RR while loop.
  					
- 					//curr_time += QUANTUM;
- 					Rem_bt[k] -= QUANTUM; //count_time=0;
+ 					Rem_bt[k] -= QUANTUM; 
  					c1=0; c2+=QUANTUM; c3+=QUANTUM;
  					
 				 } // end of Queue1 highest priority.--------------------------------------------------------------
                	
 			  
-			  else if(k==2)  // QUEUE2 STARTING Priority Algo.
+			  else if(k==2 && n2!=0)  // QUEUE2 STARTING Priority Algo.
 				{
                  //calculating WAITING TIME....
      			   count_time=0;
@@ -174,8 +173,7 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
         		       	 continue;
 					   }
 					   else if(rem2_bt[i]<=0 && rem2_bt[i+1]>0 ) 
-        		       {
-        		       	// q2[i].wt += c2 ; 
+        		       { 
 							q2[i+1].wt += q2[i].bt + q2[i].wt +c2 ; continue;
 					   }
 					     q2[i].wt += c2 ;
@@ -198,13 +196,12 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 						}
 				     }
 
-                   //curr_time+=QUANTUM;
                    Rem_bt[k] -= QUANTUM;
-                   c2=0; //count_time=0;
+                   c2=0; 
                    c1+=QUANTUM; c3+=QUANTUM;
 		          }  // end of QUEUE2  
 			   
-              else if(k==3)  // QUEUE3 STARTING FCFS Algo.
+              else if(k==3 && n3!=0)  // QUEUE3 STARTING FCFS Algo.
 				{
                  //calculating WAITING TIME-------------------------
      			   count_time=0;
@@ -216,7 +213,6 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 					   }
 					   else if(rem3_bt[i]<=0 && rem3_bt[i+1]>0 ) 
         		       {
-        		       	     //q3[i].wt += c3 ;
 							 q3[i+1].wt += q3[i].bt + q3[i].wt +c3 ; continue;
 					   }
 					     q3[i].wt += c3 ;
@@ -239,8 +235,7 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 					    }
 				     }
 
-                   //curr_time+=QUANTUM;
-                   Rem_bt[k] -= QUANTUM; //count_time=0;
+                   Rem_bt[k] -= QUANTUM; 
                    c1+= QUANTUM; c2+=QUANTUM; c3=0;
 		          }  // end of QUEUE3 ========================================
 
@@ -252,9 +247,8 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 		 { 
 		   
 		 
-		   if(k==1)  // QUEUE1
-		   {
-		         //curr_time+= c1;  
+		   if(k==1 && n1!=0)  // QUEUE1
+		   {  
     			t += c1;  	
 		    	while (1)
     			{
@@ -287,7 +281,7 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 						       
 		      } // End of queue1.
 		      
-		  else if(k==2)  // QUEUE2
+		  else if(k==2  && n2!=0)  // QUEUE2
 		  {
 		  	 for(i=1; i<=n2 ; i++)
         		   {
@@ -305,8 +299,7 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 					   }
 					   else if(rem2_bt[i]<=0 && rem2_bt[i+1]>0 ) 
         		       {
-        		       	 // q2[i].wt += c2 ;
-							 q2[i+1].wt = q2[i].bt + q2[i].wt +c2 ; continue; //cHANGED += here q2[i+1].wt = q2[i].bt + q2[i].wt
+							 q2[i+1].wt = q2[i].bt + q2[i].wt +c2 ; continue; 
 					   }
 					     q2[i].wt += c2 ;
 					     rem2_bt[i]=0;
@@ -318,7 +311,7 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 			 Rem_bt[k]=0;
 		   }
 		   
-		   else if(k==3)  // QUEUE3 
+		   else if(k==3  && n3!=0)  // QUEUE3 
 		  {
 		  	 for(i=1; i<=n3 ; i++)
         		   {
@@ -337,7 +330,7 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 					   else if(rem3_bt[i]<=0 && rem3_bt[i+1]>0 ) 
         		       {
         		       	 // q3[i].wt += c3 ;
-							 q3[i+1].wt = q3[i].bt + q3[i].wt +c3 ; continue; //cHANGED += here q2[i+1].wt = q2[i].bt + q2[i].wt
+							 q3[i+1].wt = q3[i].bt + q3[i].wt +c3 ; continue; 
 					   }
 					     q3[i].wt += c3 ;
 					     rem3_bt[i]=0;
@@ -361,16 +354,20 @@ struct process copy[3],q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
             break;
 	
   }//END OF OUTER WHILE for queue.
-  
  //----Turn Around Time for Queue1 , Queue2 , Queue3============================
- 
+  int wt_sum=0,tat_sum=0;
  for (int i = 1; i <= n1 ; i++)
-  { q1[i].tat = q1[i].bt + q1[i].wt; }
+  { q1[i].tat = q1[i].bt + q1[i].wt;
+    wt_sum+=q1[i].wt;  tat_sum+=q1[i].tat; 
+   }
  for (int i = 1; i <= n2 ; i++)
-  { q2[i].tat = q2[i].bt + q2[i].wt; }
+  { q2[i].tat = q2[i].bt + q2[i].wt;
+    wt_sum+=q2[i].wt;  tat_sum+=q2[i].tat;  
+  }
  for (int i = 1; i <= n3 ; i++)
-  { q3[i].tat = q3[i].bt + q3[i].wt; }
- 
+  { q3[i].tat = q3[i].bt + q3[i].wt;
+    wt_sum+=q3[i].wt;  tat_sum+=q3[i].tat;  
+  }
 //==============================================================================
 //  TO PRINT EACH QUEUE details...
 
@@ -394,5 +391,9 @@ printf("\nQUEUE3 : \n");
  {
 	printf("\n%d \t\t%d \t\t%d \t\t%d \t\t%d",q3[i].pid,q3[i].priority,q3[i].bt,q3[i].wt,q3[i].tat);
  }
-
+ 
+ printf("\n\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+ printf("\n AVERAGE WAITING  TIME = %.3f sec.",float(wt_sum)/(float)n);
+ printf("\n AVERAGE TURN AROUND TIME = %.3f sec.",float(tat_sum)/(float)n);
+printf("\n\n************************~~~~~~~~~~~~~~~ THE END ~~~~~~~~~~~~~~~***************************\n\n");
 }//End of main()
