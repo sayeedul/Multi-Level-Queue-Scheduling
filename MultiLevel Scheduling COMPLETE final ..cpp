@@ -181,17 +181,20 @@ struct process q1[n1],q2[n2],q3[n3]; int sum1=0,sum2=0,sum3=0;
 					          break;
 						   rem2_bt[i]-= 1;
 					       count_time++;
-						}				   
+						}
+						if(rem2_bt[i]==0 )
+						{
+							q2[i+1].wt = q2[i].bt + q2[i].wt + c2;
+							rem2_bt[i]=0;
+						}
+									   
 					   if(count_time==10)
 					          break;
 					    if(i==n2)
 					    {
 					      break;	
 						}
-						if(rem2_bt[i]==0)
-						{
-							q2[i+1].wt = q2[i].bt + q2[i].wt ;
-						}
+							
 				     }
 
                    Rem_bt[k] -= QUANTUM;
